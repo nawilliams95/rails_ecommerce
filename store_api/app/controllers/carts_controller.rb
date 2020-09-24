@@ -1,4 +1,5 @@
 class CartsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
   before_action :set_cart, only: [:show, :update, :destroy]
 
   # GET /carts
@@ -8,17 +9,14 @@ class CartsController < ApplicationController
     render json: @carts
   end
 
-  # GET /carts/1
-  def show
-    render json: @cart
-  end
+  
 
   # POST /carts
   def create
     @cart = Cart.new(cart_params)
 
     if @cart.save
-      render json: @cart, status: :created, location: @cart
+      render json: @cart, :show, status: :created, location: @cart
     else
       render json: @cart.errors, status: :unprocessable_entity
     end
@@ -27,7 +25,7 @@ class CartsController < ApplicationController
   # PATCH/PUT /carts/1
   def update
     if @cart.update(cart_params)
-      render json: @cart
+      render json: { render :show, status: :ok, location: @cart }
     else
       render json: @cart.errors, status: :unprocessable_entity
     end
@@ -35,7 +33,9 @@ class CartsController < ApplicationController
 
   # DELETE /carts/1
   def destroy
-    @cart.destroy
+    @cart.destroy if @cart.id == session[:cart_id]
+    session[:cart_id] = nil
+    render json: { head :no_content }
   end
 
   private
@@ -47,5 +47,10 @@ class CartsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def cart_params
       params.fetch(:cart, {})
+    end
+
+    def invalid_cart
+      logger.error "Attempt to access invalid cart #{params[:id]}"
+      redirect_to root_path, notice: "That cart doesn't exist"
     end
 end
