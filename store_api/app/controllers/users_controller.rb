@@ -38,6 +38,16 @@ class UsersController < ApplicationController
     @user.destroy
   end
 
+  #Login 
+  def login
+    user = User.find_by(username: params[:user][:username])
+    if user && user.authenticate(params[:user][:password])
+      render json: {status: 200, user: user}
+    else
+      render json: {status: 401, message: "Unauthorized"}
+    end
+end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
