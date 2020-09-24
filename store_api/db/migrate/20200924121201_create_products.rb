@@ -5,7 +5,7 @@ class CreateProducts < ActiveRecord::Migration[6.0]
       t.decimal :price, precision: 5, scale: 2, default: 0
       t.string :description
       t.string :product_img
-      t.stirng :brand 
+      t.string :brand 
   
 
       t.timestamps
