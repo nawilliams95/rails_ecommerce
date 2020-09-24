@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :users
+  resources :users do                                                            
+    collection do                                                                
+      post '/login', to: 'users#login'                                            
+    end                                                                          
+  end                                                                                
+ 
   resources :line_items
   resources :carts
   resources :products
