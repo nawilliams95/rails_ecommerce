@@ -1,15 +1,17 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :update, :destroy]
+  before_action :authorize_user, except: [:index, :show]
 
   # GET /products
   def index
-    @products = Product.all
+    @products = Product.all.order('id ASC')
 
     render json: @products
   end
 
   # GET /products/1
   def show
+    @product = Product.find(params[:id])
     render json: @product
   end
 

@@ -12,7 +12,7 @@ class LineItemsController < ApplicationController
   # POST /line_items
   def create
     @product = Product.find(params[:product_id])
-    @line_item = @cart.add_product(@product))
+    @line_item = @cart.add_product(@product)
 
     if @line_item.save
       render json: @line_item, status: :created, location: @line_item
@@ -24,7 +24,7 @@ class LineItemsController < ApplicationController
   # PATCH/PUT /line_items/1
   def update
     if @line_item.update(line_item_params)
-      render json: { render :show, status: :ok, location: @line_item }
+      render json:  {status: :ok, location: @line_item}
     else
       render json: @line_item.errors, status: :unprocessable_entity
     end
@@ -34,7 +34,7 @@ class LineItemsController < ApplicationController
   def destroy
     @cart = Cart.find(session[:cart_id])
     @line_item.destroy
-    render json: { head :no_content }
+    render json: { head: :no_content }
   end
 
   private
