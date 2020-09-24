@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  require 'jwt'
+
   before_action :set_user, only: [:show, :update, :destroy]
 
   # GET /users
@@ -39,15 +41,15 @@ class UsersController < ApplicationController
   end
 
   #Login controller
-  def login
-    user = User.find_by(username: params[:user][:username])
-    if user && user.authenticate(params[:user][:password])
-      token = create_token(user.id, user.username)
-      render json: {status: 200, token: token user: user}
-    else
-      render json: {status: 401, message: "Unauthorized"}
-    end
-end
+  def login                                                                        
+    user = User.find_by(username: params[:user][:username])                        
+    if user && user.authenticate(params[:user][:password])                         
+      token = create_token(user.id, user.username)                                 
+      render json: { status: 200, token: token, user: user }                       
+    else                                                                           
+      render json: { status: 401, message: "Unauthorized" }                        
+    end                                                                            
+  end
 
   private
 

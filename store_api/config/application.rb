@@ -34,5 +34,6 @@ module StoreApi
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     require "dotenv-rails"
+    require "jwt"
   end
 end
